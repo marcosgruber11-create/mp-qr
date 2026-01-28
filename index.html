@@ -2,30 +2,209 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Abrir Mercado Pago</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>Copiar y abrir Mercado Pago</title>
+  <style>
+    :root{
+      --bg1:#0b1220;
+      --bg2:#111b33
+      --card: rgba(255,255,255,.08);
+      --border: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --btn: rgba(255,255,255,.92);
+      --btnText:#0b1220;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius: 22px;
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, system-ui;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 700px at 20% 0%, #253a7a 0%, transparent 60%),
+        radial-gradient(900px 600px at 90% 20%, #0f6b8a 0%, transparent 55%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      padding: 24px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .wrap{
+      width: min(420px, 100%);
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom: 12px;
+    }
+    .dot{
+      width: 12px; height: 12px; border-radius: 50%;
+      background: rgba(255,255,255,.9);
+      box-shadow: 0 0 0 6px rgba(255,255,255,.12);
+    }
+    h1{
+      font-size: 20px;
+      margin: 0;
+      letter-spacing: .2px;
+    }
+    p{
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.35;
+      font-size: 14px;
+    }
+
+    .pill{
+      margin-top: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.12);
+      font-size: 15px;
+    }
+    .pill code{
+      color: rgba(255,255,255,.95);
+      font-size: 15px;
+      background: transparent;
+      padding: 0;
+    }
+
+    .btn{
+      width:100%;
+      margin-top: 16px;
+      border: 0;
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 17px;
+      font-weight: 700;
+      background: var(--btn);
+      color: var(--btnText);
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+      transition: transform .06s ease, opacity .2s ease;
+    }
+    .btn:active{ transform: scale(.99); }
+    .btn[disabled]{ opacity:.6; cursor: default; }
+
+    .status{
+      margin-top: 12px;
+      font-size: 13px;
+      color: rgba(255,255,255,.80);
+      min-height: 18px;
+    }
+
+    .hint{
+      margin-top: 10px;
+      font-size: 12px;
+      color: rgba(255,255,255,.62);
+    }
+
+    .footer{
+      text-align:center;
+      margin-top: 14px;
+      color: rgba(255,255,255,.55);
+      font-size: 12px;
+    }
+  </style>
 </head>
-<body style="font-family:-apple-system,system-ui; padding:24px">
-  <h2>Abrir Mercado Pago</h2>
-  <button id="btn" style="font-size:18px;padding:14px 18px">
-    Abrir app
-  </button>
-  <p id="status" style="opacity:.7;margin-top:12px"></p>
+
+<body>
+  <main class="wrap">
+    <section class="card">
+      <div class="logo">
+        <div class="dot"></div>
+        <h1>Copiar y abrir Mercado Pago</h1>
+      </div>
+
+      <p>Al tocar el botón se copiará el texto y luego se abrirá Mercado Pago.</p>
+
+      <div class="pill" aria-label="Texto a copiar">
+        <span style="color:rgba(255,255,255,.75)">Texto</span>
+        <code id="txt">valentinadag.mp</code>
+      </div>
+
+      <button class="btn" id="btn">Copiar y continuar</button>
+      <div class="status" id="status"></div>
+
+      <div class="hint">Tip: en iPhone funciona mejor si tu sitio está en HTTPS (GitHub Pages ✅).</div>
+    </section>
+
+    <div class="footer">Si la app no se abre, se usará un enlace alternativo.</div>
+  </main>
 
   <script>
+    const TEXTO = "valentinadag.mp";
+
+    // Intento 1: esquema de la app
     const MP_APP = "mercadopago://";
+
+    // Fallback: universal link (si iOS no abre la app o no está instalada)
     const MP_FALLBACK = "https://link.mercadopago.com.ar/";
 
-    document.getElementById("btn").addEventListener("click", () => {
-      document.getElementById("status").textContent = "Intentando abrir la app…";
+    const btn = document.getElementById("btn");
+    const statusEl = document.getElementById("status");
 
-      // Intento abrir la app
-      window.location.href = MP_APP;
+    function setStatus(msg){ statusEl.textContent = msg; }
 
-      // Fallback si iOS no abre la app (o no está instalada)
+    function copyFallback(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch(e) {}
+      document.body.removeChild(ta);
+    }
+
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      setStatus("Copiando…");
+
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(TEXTO);
+        } else {
+          copyFallback(TEXTO);
+        }
+        setStatus("✅ Copiado. Abriendo Mercado Pago…");
+      } catch (e) {
+        setStatus("⚠️ No pude copiar automáticamente. Abriendo Mercado Pago…");
+      }
+
+      // Importante: abrir/redirigir debe pasar cerca del gesto del usuario
       setTimeout(() => {
-        window.location.href = MP_FALLBACK;
-      }, 900);
+        window.location.href = MP_APP;
+
+        // Fallback si no abre la app
+        setTimeout(() => {
+          window.location.href = MP_FALLBACK;
+        }, 900);
+      }, 250);
     });
   </script>
 </body>
