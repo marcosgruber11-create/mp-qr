@@ -5,51 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Transferir rápido</title>
 
-  <!-- iOS "app-like" -->
+  <!-- iOS: look & feel tipo app -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="theme-color" content="#0B1220">
 
   <style>
     :root{
-      --bg: #0B1220;
-      --card: rgba(255,255,255,.08);
-      --card2: rgba(255,255,255,.06);
+      --bg: #0b1220;
+      --bg2:#111b33;
+      --card: rgba(255,255,255,.10);
       --border: rgba(255,255,255,.14);
       --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.68);
+      --muted: rgba(255,255,255,.70);
       --btn: #ffffff;
-      --btnText:#0B1220;
-      --ok:#22c55e;
+      --btnText: #0b1220;
+      --chip: rgba(0,0,0,.22);
+      --shadow: 0 18px 55px rgba(0,0,0,.40);
+      --ok: #22c55e;
       --warn:#f59e0b;
-      --shadow: 0 18px 55px rgba(0,0,0,.45);
       --radius: 18px;
     }
 
     @media (prefers-color-scheme: light){
       :root{
         --bg:#f3f4f6;
+        --bg2:#eef0f6;
         --card:#ffffff;
-        --card2:#f6f7fb;
-        --border: rgba(15,23,42,.10);
+        --border: rgba(15,23,42,.12);
         --text: rgba(15,23,42,.92);
         --muted: rgba(15,23,42,.62);
-        --btn:#0B1220;
+        --btn:#0b1220;
         --btnText:#ffffff;
+        --chip:#f3f4f6;
         --shadow: 0 18px 45px rgba(0,0,0,.10);
       }
     }
 
-    *{ box-sizing: border-box; }
+    *{ box-sizing:border-box; }
+    html, body{ height:100%; }
+
     body{
       margin:0;
-      min-height:100vh;
       font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,system-ui;
-      background:
-        radial-gradient(900px 500px at 20% 0%, rgba(56,189,248,.25), transparent 60%),
-        radial-gradient(900px 600px at 90% 20%, rgba(167,139,250,.22), transparent 55%),
-        linear-gradient(160deg, var(--bg), var(--bg));
       color: var(--text);
+      background:
+        radial-gradient(900px 600px at 15% 0%, rgba(56,189,248,.22), transparent 55%),
+        radial-gradient(900px 650px at 90% 15%, rgba(167,139,250,.18), transparent 55%),
+        linear-gradient(160deg, var(--bg), var(--bg2));
       padding:
         max(18px, env(safe-area-inset-top))
         18px
@@ -60,13 +62,16 @@
       justify-content:center;
     }
 
-    .wrap{ width:min(460px, 100%); }
+    .wrap{ width:min(480px, 100%); }
+
     .card{
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     .header{
@@ -76,12 +81,14 @@
       align-items:center;
     }
 
-    .badge{
-      width:38px;height:38px;border-radius:12px;
-      background: linear-gradient(135deg, rgba(56,189,248,.9), rgba(167,139,250,.9));
-      display:flex;align-items:center;justify-content:center;
-      color:#0B1220;
+    .brand{
+      width:40px; height:40px; border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(135deg, rgba(56,189,248,.95), rgba(167,139,250,.95));
+      color:#06101f;
       font-weight:900;
+      letter-spacing:.3px;
+      user-select:none;
     }
 
     h1{
@@ -89,8 +96,9 @@
       font-size:18px;
       letter-spacing:.2px;
     }
+
     .sub{
-      margin:2px 0 0;
+      margin:3px 0 0;
       font-size:13px;
       color: var(--muted);
       line-height:1.35;
@@ -100,37 +108,59 @@
 
     .aliasBox{
       margin-top: 14px;
-      background: var(--card2);
+      padding: 14px;
+      border-radius: 16px;
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px 12px;
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:center;
+      background: rgba(0,0,0,.12);
     }
-    .label{ font-size:12px; color: var(--muted); }
-    .alias{
-      font-size:16px;
-      font-weight:800;
-      letter-spacing:.2px;
-      word-break: break-all;
+    @media (prefers-color-scheme: light){
+      .aliasBox{ background: var(--chip); }
     }
 
-    .row{
+    .row1{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom: 10px;
+    }
+    .label{
+      font-size:12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .alias{
+      font-size:18px;
+      font-weight:900;
+      letter-spacing:.2px;
+      word-break: break-word;
+    }
+
+    .pill{
+      font-size:12px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 10px;
+      white-space:nowrap;
+      background: rgba(255,255,255,.06);
+    }
+
+    .buttons{
       margin-top: 14px;
       display:flex;
+      flex-direction:column;
       gap:10px;
     }
 
     button{
-      border:0;
-      border-radius: 14px;
-      padding: 14px 14px;
-      font-size:16px;
-      font-weight:800;
-      cursor:pointer;
       width:100%;
+      border:0;
+      border-radius: 16px;
+      padding: 15px 14px;
+      font-size:16px;
+      font-weight:900;
+      cursor:pointer;
       transition: transform .06s ease, opacity .2s ease;
     }
     button:active{ transform: scale(.99); }
@@ -139,23 +169,14 @@
     .primary{
       background: var(--btn);
       color: var(--btnText);
+      box-shadow: 0 10px 26px rgba(0,0,0,.18);
     }
+
     .secondary{
       background: transparent;
       color: var(--text);
       border: 1px solid var(--border);
     }
-
-    .steps{
-      margin-top: 14px;
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px dashed var(--border);
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.4;
-    }
-    .steps b{ color: var(--text); }
 
     .status{
       margin-top: 12px;
@@ -166,21 +187,40 @@
       align-items:center;
       gap:8px;
     }
-
     .dot{
-      width:8px;height:8px;border-radius:50%;
+      width:9px; height:9px; border-radius:50%;
       background: rgba(255,255,255,.35);
+      flex: 0 0 auto;
     }
     .dot.ok{ background: var(--ok); }
     .dot.warn{ background: var(--warn); }
+
+    .steps{
+      margin-top: 14px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px dashed var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .steps b{ color: var(--text); }
+
+    .footer{
+      padding: 14px 18px 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
 
     /* Toast */
     .toast{
       position: fixed;
       left: 50%;
-      bottom: calc(18px + env(safe-area-inset-bottom));
-      transform: translateX(-50%) translateY(20px);
-      background: rgba(0,0,0,.78);
+      bottom: calc(16px + env(safe-area-inset-bottom));
+      transform: translateX(-50%) translateY(14px);
+      background: rgba(0,0,0,.82);
       color:#fff;
       padding: 10px 12px;
       border-radius: 12px;
@@ -195,55 +235,40 @@
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
-
-    .footer{
-      padding: 14px 18px 18px;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.35;
-    }
-    .smallLink{
-      color: inherit;
-      text-decoration: underline;
-      text-decoration-color: rgba(255,255,255,.25);
-    }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="card">
-      <div class="header">
-        <div class="badge">MP</div>
+  <main class="wrap">
+    <section class="card">
+      <header class="header">
+        <div class="brand">MP</div>
         <div>
           <h1>Transferencia rápida</h1>
-          <div class="sub">Copiá el alias y abrimos Mercado Pago para que pegues y confirmes.</div>
+          <p class="sub">Copiamos el alias y abrimos Mercado Pago para que confirmes.</p>
         </div>
-      </div>
+      </header>
 
       <div class="content">
-        <div class="aliasBox">
-          <div>
-            <div class="label">Alias</div>
-            <div class="alias" id="aliasText">valentinadag.mp</div>
+        <div class="aliasBox" aria-label="Alias a copiar">
+          <div class="row1">
+            <div>
+              <div class="label">Alias</div>
+              <div class="alias" id="aliasText">valentinadag.mp</div>
+            </div>
+            <div class="pill">Transferencia sin comisión</div>
           </div>
-          <div style="font-size:12px;color:var(--muted);text-align:right">
-            0% comisión<br/>por transferencia
-          </div>
+          <div class="label">Tip: si aparece el cartel “Copiaste un alias”, tocá <b>Transferir</b>.</div>
         </div>
 
-        <div class="row">
+        <div class="buttons">
           <button class="primary" id="goBtn">Copiar y abrir Mercado Pago</button>
-        </div>
-
-        <div class="row">
-          <button class="secondary" id="copyOnlyBtn">Solo copiar alias</button>
+          <button class="secondary" id="copyBtn">Solo copiar alias</button>
         </div>
 
         <div class="status" id="status">
-          <span class="dot" id="sDot"></span>
-          <span id="sText">Listo para copiar.</span>
+          <span class="dot" id="dot"></span>
+          <span id="statusText">Listo para empezar.</span>
         </div>
 
         <div class="steps">
@@ -252,106 +277,121 @@
       </div>
 
       <div class="footer">
-        Tip: si querés que parezca una app, en Safari tocá <b>Compartir → Agregar a pantalla de inicio</b>.
+        Para que parezca una app: en Safari tocá <b>Compartir → Agregar a pantalla de inicio</b>.
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
   <div class="toast" id="toast">✅ Alias copiado</div>
 
-<script>
-  const ALIAS = "valentinadag.mp";
+  <script>
+    const ALIAS = "valentinadag.mp";
 
-  // Intento abrir app
-  const MP_APP = "mercadopago://";
+    // Intento abrir app
+    const MP_APP = "mercadopago://";
 
-  // Fallback si no abre la app (o no está instalada)
-  const MP_FALLBACK = "https://link.mercadopago.com.ar/";
+    // Fallback si no abre la app (o no está instalada)
+    const MP_FALLBACK = "https://link.mercadopago.com.ar/";
 
-  const goBtn = document.getElementById("goBtn");
-  const copyOnlyBtn = document.getElementById("copyOnlyBtn");
-  const toast = document.getElementById("toast");
-  const sDot = document.getElementById("sDot");
-  const sText = document.getElementById("sText");
+    const goBtn = document.getElementById("goBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const toast = document.getElementById("toast");
+    const dot = document.getElementById("dot");
+    const statusText = document.getElementById("statusText");
 
-  function setStatus(kind, text){
-    sDot.className = "dot" + (kind ? (" " + kind) : "");
-    sText.textContent = text;
-  }
+    let fallbackTimer = null;
 
-  function showToast(msg){
-    toast.textContent = msg;
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 1200);
-  }
-
-  function copyFallback(text) {
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.setAttribute("readonly", "");
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    ta.style.left = "-9999px";
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand("copy"); } catch(e) {}
-    document.body.removeChild(ta);
-  }
-
-  async function copyAlias(){
-    try{
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(ALIAS);
-      } else {
-        copyFallback(ALIAS);
-      }
-      showToast("✅ Alias copiado: " + ALIAS);
-      setStatus("ok", "Alias copiado. Ahora abrimos Mercado Pago…");
-      return true;
-    }catch(e){
-      setStatus("warn", "No se pudo copiar automáticamente. Igual abrimos Mercado Pago…");
-      return false;
+    function setStatus(kind, text){
+      dot.className = "dot" + (kind ? (" " + kind) : "");
+      statusText.textContent = text;
     }
-  }
 
-  function openMercadoPagoBestEffort(){
-    // IMPORTANTE: iOS no permite “obligatorio”. Esto es el mejor esfuerzo posible.
-    // 1) Intento app scheme
-    window.location.href = MP_APP;
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1200);
+    }
 
-    // 2) Fallback
-    setTimeout(() => {
-      window.location.href = MP_FALLBACK;
-    }, 1100);
-  }
+    function cancelFallback(){
+      if (fallbackTimer){
+        clearTimeout(fallbackTimer);
+        fallbackTimer = null;
+      }
+    }
 
-  goBtn.addEventListener("click", async () => {
-    goBtn.disabled = true;
-    copyOnlyBtn.disabled = true;
+    // Si la página se oculta, casi seguro se abrió la app → cancelo fallback
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) cancelFallback();
+    });
+    window.addEventListener("pagehide", cancelFallback);
 
-    setStatus("", "Copiando alias…");
-    await copyAlias();
+    function copyFallback(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch(e) {}
+      document.body.removeChild(ta);
+    }
 
-    // Mantenerlo cerca del gesto del usuario
-    setTimeout(() => {
-      openMercadoPagoBestEffort();
+    async function copyAlias(){
+      try{
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(ALIAS);
+        } else {
+          copyFallback(ALIAS);
+        }
+        showToast("✅ Alias copiado: " + ALIAS);
+        setStatus("ok", "Alias copiado. Abriendo Mercado Pago…");
+        return true;
+      } catch(e){
+        setStatus("warn", "No pude copiar automáticamente. Igual abrimos Mercado Pago…");
+        return false;
+      }
+    }
 
-      // re-habilitar por si el usuario vuelve
+    function openMercadoPagoBestEffort(){
+      // iOS/Android no garantizan forzar una app desde web.
+      // Esto es el mejor esfuerzo: intento app + fallback si no se abrió.
+      window.location.href = MP_APP;
+
+      cancelFallback();
+      fallbackTimer = setTimeout(() => {
+        window.location.href = MP_FALLBACK;
+      }, 1400);
+    }
+
+    goBtn.addEventListener("click", async () => {
+      goBtn.disabled = true;
+      copyBtn.disabled = true;
+
+      setStatus("", "Copiando alias…");
+      await copyAlias();
+
+      // Pegado al tap del usuario para máxima tasa de apertura
       setTimeout(() => {
-        goBtn.disabled = false;
-        copyOnlyBtn.disabled = false;
-        setStatus("", "Si no se abrió la app, se usó un enlace alternativo.");
-      }, 1500);
-    }, 250);
-  });
+        openMercadoPagoBestEffort();
 
-  copyOnlyBtn.addEventListener("click", async () => {
-    copyOnlyBtn.disabled = true;
-    setStatus("", "Copiando alias…");
-    const ok = await copyAlias();
-    setStatus(ok ? "ok" : "warn", ok ? "✅ Copiado. Pegalo en Mercado Pago." : "⚠️ Copiado puede fallar. Pegalo manualmente.");
-    setTimeout(() => copyOnlyBtn.disabled = false, 900);
-  });
-</script>
+        // Rehabilitar por si el usuario vuelve
+        setTimeout(() => {
+          goBtn.disabled = false;
+          copyBtn.disabled = false;
+          setStatus("", "Si no apareció el cartel, pegá el alias en “Transferir”.");
+        }, 1600);
+      }, 250);
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      copyBtn.disabled = true;
+      setStatus("", "Copiando alias…");
+      const ok = await copyAlias();
+      setStatus(ok ? "ok" : "warn", ok ? "✅ Copiado. Abrí Mercado Pago y pegalo." : "⚠️ Puede fallar el copiado. Probá de nuevo.");
+      setTimeout(() => copyBtn.disabled = false, 900);
+    });
+  </script>
 </body>
 </html>
