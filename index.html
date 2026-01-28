@@ -3,209 +3,355 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b1220" />
-  <title>Copiar y abrir Mercado Pago</title>
+  <title>Transferir rápido</title>
+
+  <!-- iOS "app-like" -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#0B1220">
+
   <style>
     :root{
-      --bg1:#0b1220;
-      --bg2:#111b33
+      --bg: #0B1220;
       --card: rgba(255,255,255,.08);
+      --card2: rgba(255,255,255,.06);
       --border: rgba(255,255,255,.14);
       --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.70);
-      --btn: rgba(255,255,255,.92);
-      --btnText:#0b1220;
-      --shadow: 0 20px 60px rgba(0,0,0,.35);
-      --radius: 22px;
+      --muted: rgba(255,255,255,.68);
+      --btn: #ffffff;
+      --btnText:#0B1220;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --shadow: 0 18px 55px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f3f4f6;
+        --card:#ffffff;
+        --card2:#f6f7fb;
+        --border: rgba(15,23,42,.10);
+        --text: rgba(15,23,42,.92);
+        --muted: rgba(15,23,42,.62);
+        --btn:#0B1220;
+        --btnText:#ffffff;
+        --shadow: 0 18px 45px rgba(0,0,0,.10);
+      }
     }
 
     *{ box-sizing: border-box; }
     body{
       margin:0;
       min-height:100vh;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, system-ui;
-      color: var(--text);
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,system-ui;
       background:
-        radial-gradient(1200px 700px at 20% 0%, #253a7a 0%, transparent 60%),
-        radial-gradient(900px 600px at 90% 20%, #0f6b8a 0%, transparent 55%),
-        linear-gradient(160deg, var(--bg1), var(--bg2));
-      padding: 24px 18px;
+        radial-gradient(900px 500px at 20% 0%, rgba(56,189,248,.25), transparent 60%),
+        radial-gradient(900px 600px at 90% 20%, rgba(167,139,250,.22), transparent 55%),
+        linear-gradient(160deg, var(--bg), var(--bg));
+      color: var(--text);
+      padding:
+        max(18px, env(safe-area-inset-top))
+        18px
+        max(18px, env(safe-area-inset-bottom))
+        18px;
       display:flex;
       align-items:center;
       justify-content:center;
     }
 
-    .wrap{
-      width: min(420px, 100%);
-    }
-
+    .wrap{ width:min(460px, 100%); }
     .card{
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 20px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      overflow:hidden;
     }
 
-    .logo{
+    .header{
+      padding: 18px 18px 14px;
       display:flex;
+      gap:12px;
       align-items:center;
-      gap:10px;
-      margin-bottom: 12px;
     }
-    .dot{
-      width: 12px; height: 12px; border-radius: 50%;
-      background: rgba(255,255,255,.9);
-      box-shadow: 0 0 0 6px rgba(255,255,255,.12);
+
+    .badge{
+      width:38px;height:38px;border-radius:12px;
+      background: linear-gradient(135deg, rgba(56,189,248,.9), rgba(167,139,250,.9));
+      display:flex;align-items:center;justify-content:center;
+      color:#0B1220;
+      font-weight:900;
     }
+
     h1{
-      font-size: 20px;
-      margin: 0;
-      letter-spacing: .2px;
+      margin:0;
+      font-size:18px;
+      letter-spacing:.2px;
     }
-    p{
-      margin: 10px 0 0;
+    .sub{
+      margin:2px 0 0;
+      font-size:13px;
       color: var(--muted);
-      line-height: 1.35;
-      font-size: 14px;
+      line-height:1.35;
     }
 
-    .pill{
+    .content{ padding: 0 18px 18px; }
+
+    .aliasBox{
       margin-top: 14px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 12px;
       display:flex;
-      align-items:center;
       justify-content:space-between;
       gap:10px;
-      padding: 12px 14px;
-      border-radius: 16px;
-      background: rgba(0,0,0,.18);
-      border: 1px solid rgba(255,255,255,.12);
-      font-size: 15px;
+      align-items:center;
     }
-    .pill code{
-      color: rgba(255,255,255,.95);
-      font-size: 15px;
-      background: transparent;
-      padding: 0;
+    .label{ font-size:12px; color: var(--muted); }
+    .alias{
+      font-size:16px;
+      font-weight:800;
+      letter-spacing:.2px;
+      word-break: break-all;
     }
 
-    .btn{
+    .row{
+      margin-top: 14px;
+      display:flex;
+      gap:10px;
+    }
+
+    button{
+      border:0;
+      border-radius: 14px;
+      padding: 14px 14px;
+      font-size:16px;
+      font-weight:800;
+      cursor:pointer;
       width:100%;
-      margin-top: 16px;
-      border: 0;
-      border-radius: 16px;
-      padding: 14px 16px;
-      font-size: 17px;
-      font-weight: 700;
-      background: var(--btn);
-      color: var(--btnText);
-      cursor: pointer;
-      box-shadow: 0 10px 24px rgba(0,0,0,.25);
       transition: transform .06s ease, opacity .2s ease;
     }
-    .btn:active{ transform: scale(.99); }
-    .btn[disabled]{ opacity:.6; cursor: default; }
+    button:active{ transform: scale(.99); }
+    button[disabled]{ opacity:.65; cursor:default; }
+
+    .primary{
+      background: var(--btn);
+      color: var(--btnText);
+    }
+    .secondary{
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .steps{
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px dashed var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .steps b{ color: var(--text); }
 
     .status{
       margin-top: 12px;
+      min-height: 20px;
       font-size: 13px;
-      color: rgba(255,255,255,.80);
-      min-height: 18px;
+      color: var(--muted);
+      display:flex;
+      align-items:center;
+      gap:8px;
     }
 
-    .hint{
-      margin-top: 10px;
-      font-size: 12px;
-      color: rgba(255,255,255,.62);
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background: rgba(255,255,255,.35);
+    }
+    .dot.ok{ background: var(--ok); }
+    .dot.warn{ background: var(--warn); }
+
+    /* Toast */
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: calc(18px + env(safe-area-inset-bottom));
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(0,0,0,.78);
+      color:#fff;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity .18s ease, transform .18s ease;
+      max-width: calc(100vw - 36px);
+      text-align:center;
+    }
+    .toast.show{
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
 
     .footer{
-      text-align:center;
-      margin-top: 14px;
-      color: rgba(255,255,255,.55);
+      padding: 14px 18px 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
       font-size: 12px;
+      line-height: 1.35;
+    }
+    .smallLink{
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-color: rgba(255,255,255,.25);
     }
   </style>
 </head>
 
 <body>
-  <main class="wrap">
-    <section class="card">
-      <div class="logo">
-        <div class="dot"></div>
-        <h1>Copiar y abrir Mercado Pago</h1>
+  <div class="wrap">
+    <div class="card">
+      <div class="header">
+        <div class="badge">MP</div>
+        <div>
+          <h1>Transferencia rápida</h1>
+          <div class="sub">Copiá el alias y abrimos Mercado Pago para que pegues y confirmes.</div>
+        </div>
       </div>
 
-      <p>Al tocar el botón se copiará el texto y luego se abrirá Mercado Pago.</p>
+      <div class="content">
+        <div class="aliasBox">
+          <div>
+            <div class="label">Alias</div>
+            <div class="alias" id="aliasText">valentinadag.mp</div>
+          </div>
+          <div style="font-size:12px;color:var(--muted);text-align:right">
+            0% comisión<br/>por transferencia
+          </div>
+        </div>
 
-      <div class="pill" aria-label="Texto a copiar">
-        <span style="color:rgba(255,255,255,.75)">Texto</span>
-        <code id="txt">valentinadag.mp</code>
+        <div class="row">
+          <button class="primary" id="goBtn">Copiar y abrir Mercado Pago</button>
+        </div>
+
+        <div class="row">
+          <button class="secondary" id="copyOnlyBtn">Solo copiar alias</button>
+        </div>
+
+        <div class="status" id="status">
+          <span class="dot" id="sDot"></span>
+          <span id="sText">Listo para copiar.</span>
+        </div>
+
+        <div class="steps">
+          En Mercado Pago: <b>Transferir → Pegar alias → Continuar</b>
+        </div>
       </div>
 
-      <button class="btn" id="btn">Copiar y continuar</button>
-      <div class="status" id="status"></div>
+      <div class="footer">
+        Tip: si querés que parezca una app, en Safari tocá <b>Compartir → Agregar a pantalla de inicio</b>.
+      </div>
+    </div>
+  </div>
 
-      <div class="hint">Tip: en iPhone funciona mejor si tu sitio está en HTTPS (GitHub Pages ✅).</div>
-    </section>
+  <div class="toast" id="toast">✅ Alias copiado</div>
 
-    <div class="footer">Si la app no se abre, se usará un enlace alternativo.</div>
-  </main>
+<script>
+  const ALIAS = "valentinadag.mp";
 
-  <script>
-    const TEXTO = "valentinadag.mp";
+  // Intento abrir app
+  const MP_APP = "mercadopago://";
 
-    // Intento 1: esquema de la app
-    const MP_APP = "mercadopago://";
+  // Fallback si no abre la app (o no está instalada)
+  const MP_FALLBACK = "https://link.mercadopago.com.ar/";
 
-    // Fallback: universal link (si iOS no abre la app o no está instalada)
-    const MP_FALLBACK = "https://link.mercadopago.com.ar/";
+  const goBtn = document.getElementById("goBtn");
+  const copyOnlyBtn = document.getElementById("copyOnlyBtn");
+  const toast = document.getElementById("toast");
+  const sDot = document.getElementById("sDot");
+  const sText = document.getElementById("sText");
 
-    const btn = document.getElementById("btn");
-    const statusEl = document.getElementById("status");
+  function setStatus(kind, text){
+    sDot.className = "dot" + (kind ? (" " + kind) : "");
+    sText.textContent = text;
+  }
 
-    function setStatus(msg){ statusEl.textContent = msg; }
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 1200);
+  }
 
-    function copyFallback(text) {
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.setAttribute("readonly", "");
-      ta.style.position = "fixed";
-      ta.style.opacity = "0";
-      ta.style.left = "-9999px";
-      document.body.appendChild(ta);
-      ta.select();
-      try { document.execCommand("copy"); } catch(e) {}
-      document.body.removeChild(ta);
-    }
+  function copyFallback(text) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch(e) {}
+    document.body.removeChild(ta);
+  }
 
-    btn.addEventListener("click", async () => {
-      btn.disabled = true;
-      setStatus("Copiando…");
-
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(TEXTO);
-        } else {
-          copyFallback(TEXTO);
-        }
-        setStatus("✅ Copiado. Abriendo Mercado Pago…");
-      } catch (e) {
-        setStatus("⚠️ No pude copiar automáticamente. Abriendo Mercado Pago…");
+  async function copyAlias(){
+    try{
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(ALIAS);
+      } else {
+        copyFallback(ALIAS);
       }
+      showToast("✅ Alias copiado: " + ALIAS);
+      setStatus("ok", "Alias copiado. Ahora abrimos Mercado Pago…");
+      return true;
+    }catch(e){
+      setStatus("warn", "No se pudo copiar automáticamente. Igual abrimos Mercado Pago…");
+      return false;
+    }
+  }
 
-      // Importante: abrir/redirigir debe pasar cerca del gesto del usuario
+  function openMercadoPagoBestEffort(){
+    // IMPORTANTE: iOS no permite “obligatorio”. Esto es el mejor esfuerzo posible.
+    // 1) Intento app scheme
+    window.location.href = MP_APP;
+
+    // 2) Fallback
+    setTimeout(() => {
+      window.location.href = MP_FALLBACK;
+    }, 1100);
+  }
+
+  goBtn.addEventListener("click", async () => {
+    goBtn.disabled = true;
+    copyOnlyBtn.disabled = true;
+
+    setStatus("", "Copiando alias…");
+    await copyAlias();
+
+    // Mantenerlo cerca del gesto del usuario
+    setTimeout(() => {
+      openMercadoPagoBestEffort();
+
+      // re-habilitar por si el usuario vuelve
       setTimeout(() => {
-        window.location.href = MP_APP;
+        goBtn.disabled = false;
+        copyOnlyBtn.disabled = false;
+        setStatus("", "Si no se abrió la app, se usó un enlace alternativo.");
+      }, 1500);
+    }, 250);
+  });
 
-        // Fallback si no abre la app
-        setTimeout(() => {
-          window.location.href = MP_FALLBACK;
-        }, 900);
-      }, 250);
-    });
-  </script>
+  copyOnlyBtn.addEventListener("click", async () => {
+    copyOnlyBtn.disabled = true;
+    setStatus("", "Copiando alias…");
+    const ok = await copyAlias();
+    setStatus(ok ? "ok" : "warn", ok ? "✅ Copiado. Pegalo en Mercado Pago." : "⚠️ Copiado puede fallar. Pegalo manualmente.");
+    setTimeout(() => copyOnlyBtn.disabled = false, 900);
+  });
+</script>
 </body>
 </html>
